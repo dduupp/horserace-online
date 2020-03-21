@@ -1,0 +1,15 @@
+:root {
+  --color-primary: orange;
+  --color-shadow: rgba(0, 0, 0, 0.05);
+
+  --font-family-sans: sans-serif;
+
+  --spacing-xxs: 3px;
+  --spacing-xsm: 6px;
+  --spacing-sml: 12px;
+  --spacing-med: 24px;
+  --spacing-lrg: 48px;
+  --spacing-xlr: 96px;
+
+  --panel-box-shadow: 0 0 var(--spacing-med) var(--color-shadow);
+}

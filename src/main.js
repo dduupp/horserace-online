@@ -3,9 +3,13 @@ import App from './App.vue';
 import './registerServiceWorker';
 import router from './router';
 
-import './assets/styles/index.css';
+import './styles/index.scss';
 
 Vue.config.productionTip = false;
+
+import registerComponents from './components';
+
+registerComponents(Vue);
 
 new Vue({
   router,

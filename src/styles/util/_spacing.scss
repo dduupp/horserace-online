@@ -1,0 +1,11 @@
+.u-spacer {
+  + .u-spacer {
+    margin-top: var(--spacing-med);
+  }
+
+  @each $size in $spacing {
+    + .u-spacer--#{$size} {
+      margin-top: var(--spacing-#{$size});
+    }
+  }
+}
