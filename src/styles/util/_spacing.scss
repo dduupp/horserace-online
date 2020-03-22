@@ -9,3 +9,40 @@
     }
   }
 }
+
+$spacing-utilities: (
+  m: margin,
+  mx: margin-left margin-right,
+  my: margin-top margin-bottom,
+  ml: margin-left,
+  mr: margin-right,
+  mt: margin-top,
+  mb: margin-bottom,
+  p: padding,
+  px: padding-left padding-right,
+  py: padding-top padding-bottom,
+  pl: padding-left,
+  pr: padding-right,
+  pt: padding-top,
+  pb: padding-bottom
+);
+
+@each $spacing-type, $rules in $spacing-utilities {
+  .u-#{$spacing-type}-0 {
+    @each $rule in $rules {
+      #{$rule}: 0 !important;
+    }
+  }
+  .u-#{$spacing-type}-a {
+    @each $rule in $rules {
+      #{$rule}: auto !important;
+    }
+  }
+  @each $size in $spacing {
+    .u-#{$spacing-type}-#{$size} {
+      @each $rule in $rules {
+        #{rule}: var(--spacing-#{$size}) !important;
+      }
+    }
+  }
+}

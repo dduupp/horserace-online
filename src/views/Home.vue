@@ -1,21 +1,30 @@
 <template>
   <div>
-    <ui-panel class="u-spacer">
-      <h3>Join game</h3>
-      <p>Enter the game ID</p>
-      <div class="u-spacer">
-        <input type="text" maxlength="4" v-model="gameId" />
-      </div>
-      <div class="u-spacer">
-        <button @click="joinGame(gameId)" :disabled="!gameId">
-          Join game!
-        </button>
-      </div>
-    </ui-panel>
-    <ui-panel class="u-spacer">
-      <h3>Create game</h3>
-      <button @click="createGame">Join game!</button>
-    </ui-panel>
+    <ui-section>
+      <ui-container>
+        <h1>Horserace online</h1>
+        <ui-grid>
+          <ui-panel>
+            <h3>Join game</h3>
+            <p>Enter the game ID</p>
+            <div class="u-spacer">
+              <input type="text" maxlength="4" v-model="gameId" />
+            </div>
+            <div class="u-spacer">
+              <button @click="joinGame(gameId)" :disabled="!gameId">
+                Join game
+              </button>
+            </div>
+          </ui-panel>
+          <ui-panel>
+            <h3>Create game</h3>
+            <button @click="createGame">
+              Create game
+            </button>
+          </ui-panel>
+        </ui-grid>
+      </ui-container>
+    </ui-section>
   </div>
 </template>
 

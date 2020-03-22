@@ -1,5 +1,5 @@
 <template>
-  <div :class="blockClass">
+  <div :class="`ui-panel ui-panel--${this.size}`">
     <slot />
   </div>
 </template>
@@ -17,11 +17,6 @@ export default {
         );
       }
     }
-  },
-  computed: {
-    blockClass() {
-      return `ui-panel ui-panel--${this.size}`;
-    }
   }
 };
 </script>
@@ -30,8 +25,9 @@ export default {
 $sizes: xxs, xsm, xsm, sml, med, lrg, xlr, xxl;
 
 .ui-panel {
-  position: relative;
-  box-shadow: var(--panel-box-shadow);
+  border-width: var(--panel-border-width);
+  border-style: var(--panel-border-style);
+  border-color: var(--panel-border-color);
 }
 
 @each $size in $sizes {

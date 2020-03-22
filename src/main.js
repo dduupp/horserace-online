@@ -7,9 +7,9 @@ import './styles/index.scss';
 
 Vue.config.productionTip = false;
 
-import registerComponents from './components';
+import Components from './components';
 
-registerComponents(Vue);
+Vue.use(Components);
 
 new Vue({
   router,
