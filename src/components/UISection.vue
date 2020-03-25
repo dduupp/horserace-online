@@ -1,5 +1,5 @@
 <template>
-  <section class="ui-section">
+  <section class="ui-section ui-section--default">
     <h2 class="ui-section__title" v-if="title" v-html="title" />
     <slot />
   </section>
@@ -16,5 +16,9 @@ export default {
 <style>
 .ui-section {
   padding: var(--spacing-med) 0;
+}
+
+.ui-section--default + .ui-section--default {
+  padding-top: 0;
 }
 </style>
