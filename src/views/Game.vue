@@ -1,11 +1,12 @@
 <template>
   <div>
     <h1>Horserace online</h1>
-    <div class="game-board">
+    <div class="game-board" v-if="game">
       <div class="left">
-        <div v-if="game">
+        <div>
           <button class="next-btn" @click="iterateGame">
-            Next Iteration ({{ getFirstPosition.position }})
+            Next Iteration
+            <span v-if="firstPosition">({{ firstPosition.position }})</span>
           </button>
 
           <p>played stack:</p>
@@ -18,30 +19,21 @@
             />
           </div>
         </div>
-        <div>
+        <div v-if="firstPosition">
           First place position:
           <div>
             <img
               class="card"
-              v-bind:src="'/img/cards/' + getFirstPosition.card.code + '.svg'"
+              v-bind:src="'/img/cards/' + firstPosition.card.code + '.svg'"
             />
           </div>
         </div>
-        <div>
-          Harten-naam: Charlotte (4 slokken) <br />
-          schuppen-naam: Hoerebok (4 slokken)<br />
-          koeken-naam: Krak (2 slok)<br />
-          Klaver-naam: Tok Tok (3 slok)<br />
-        </div>
-        <div>
-          <!-- <pre>{{ game }}</pre> -->
-        </div>
-        <div v-if="getWinner" class="winning-screen">
+        <div v-if="winner" class="winning-screen">
           <h1>Winner:</h1>
           <div>
             <img
               class="card"
-              v-bind:src="'/img/cards/' + getFirstPosition + '.svg'"
+              v-bind:src="'/img/cards/' + firstPosition + '.svg'"
             />
           </div>
         </div>
@@ -98,35 +90,29 @@ export default {
     }
   },
   computed: {
-    getFirstPosition() {
-      if (this.game) {
-        const sortedPositions = [...this.game.lanes].sort((a, b) => {
-          if (a.position > b.position) return -1;
-          if (a.position < b.position) return 1;
-          return 0;
-        });
+    sortedPositions() {
+      const { game } = this;
 
-        return sortedPositions[0];
-      }
+      if (!game) return [];
 
-      return this.game.lanes[0];
+      return game.lanes.sort((a, b) => {
+        if (a.position > b.position) return -1;
+        if (a.position < b.position) return 1;
+        return 0;
+      });
     },
-    getLastPosition() {
-      if (this.game) {
-        const firstposition = [...this.game.lanes].sort((a, b) => {
-          if (a.position > b.position) return -1;
-          if (a.position < b.position) return -1;
-          return 0;
-        });
-
-        return firstposition[0];
-      }
-
-      return this.game.lanes[0];
+    firstPosition() {
+      return this.sortedPositions[0];
     },
-    getWinner() {
-      const game = this.game.lanes.find(val => val.status === 'FINISHED');
-      return game;
+    lastPosition() {
+      return this.sortedPositions[3];
+    },
+    winner() {
+      const { game } = this;
+
+      if (!game) return;
+
+      return game.lanes.find(val => val.status === 'FINISHED');
     }
   }
 };
