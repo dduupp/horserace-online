@@ -1,60 +1,69 @@
 <template>
   <div>
-    <h1>Horserace online</h1>
-    <div class="game-board" v-if="game">
-      <div class="left">
-        <div>
-          <button class="next-btn" @click="iterateGame">
-            Next Iteration
-            <span v-if="firstPosition">({{ firstPosition.position }})</span>
-          </button>
-
-          <p>played stack:</p>
-          <div class="hand hhand-compact">
-            <img
-              v-for="({ code }, key) in game.deck.pile"
-              :key="key"
-              class="card"
-              v-bind:src="'/img/cards/' + code + '.svg'"
-            />
+    <div class="container">
+      <div class="game" v-if="game">
+        <div class="game__info">
+          <img
+            src="/img/cards/RED_BACK.svg"
+            @click="iterateGame"
+            alt=""
+            class="card"
+          />
+          <div class="game__deck">
+            <div class="hand hhand-compact">
+              <img
+                v-for="({ code }, key) in game.deck.pile"
+                :key="key"
+                class="card"
+                v-bind:src="'/img/cards/' + code + '.svg'"
+              />
+            </div>
+          </div>
+          <button @click="resetGame">Reset game</button>
+          <h2>Place your bets:</h2>
+          <h3>&spades;</h3>
+          <textarea name="" id="" rows="4"></textarea>
+          <h3 style="color: red;">&hearts;</h3>
+          <textarea name="" id="" rows="4"></textarea>
+          <h3>&clubs;</h3>
+          <textarea name="" id="" rows="4"></textarea>
+          <h3 style="color: red;">&diams;</h3>
+          <textarea name="" id="" rows="4"></textarea>
+          <!-- <div v-if="firstPosition">
+            First place position:
+            <div>
+              <img
+                class="card"
+                v-bind:src="'/img/cards/' + firstPosition.card.code + '.svg'"
+              />
+            </div>
+          </div> -->
+          <div v-if="winner" class="winner">
+            <div>
+              <h1>Winner:</h1>
+              <div>
+                <img
+                  class="card"
+                  v-bind:src="'/img/cards/' + firstPosition.card.code + '.svg'"
+                />
+              </div>
+              <button @click="resetGame">Reset game</button>
+            </div>
           </div>
         </div>
-        <div v-if="firstPosition">
-          First place position:
-          <div>
-            <img
-              class="card"
-              v-bind:src="'/img/cards/' + firstPosition.card.code + '.svg'"
-            />
-          </div>
+        <div class="game__lanes">
+          <img
+            v-for="({ position, card: { code } }, key) in game.lanes"
+            v-bind:key="key"
+            v-bind:style="{
+              transform: `translateY(${100 * position}%)`
+            }"
+            class="game__card"
+            v-bind:src="`/img/cards/${code}.svg`"
+            alt=""
+          />
         </div>
-        <div v-if="winner" class="winning-screen">
-          <h1>Winner:</h1>
-          <div>
-            <img
-              class="card"
-              v-bind:src="'/img/cards/' + firstPosition + '.svg'"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="right">
-        <h2>Run for your life</h2>
-
-        <div id="players" class="players">
-          <div class="hand">
-            <img
-              v-for="({ position, card: { code } }, key) in game.lanes"
-              v-bind:key="key"
-              v-bind:style="{
-                'margin-bottom': `-${100 * position}px`
-              }"
-              class="card"
-              v-bind:src="`/img/cards/${code}.svg`"
-              alt=""
-            />
-          </div>
-        </div>
+        <div class="game__buffer"></div>
       </div>
     </div>
   </div>
@@ -68,10 +77,7 @@ export default {
     game: null
   }),
   created() {
-    axios.post('//localhost:8080/game/').then(response => {
-      this.gameUrl = response.headers.location;
-      this.syncGameData();
-    });
+    this.createGame();
   },
   updated() {
     var element = document.getElementById('players');
@@ -83,10 +89,19 @@ export default {
         this.game = data;
       });
     },
+    createGame() {
+      axios.post('//localhost:8080/game/').then(response => {
+        this.gameUrl = response.headers.location;
+        this.syncGameData();
+      });
+    },
     iterateGame: function() {
       axios.put(`${this.gameUrl}iterate/`).then(() => {
         this.syncGameData();
       });
+    },
+    resetGame() {
+      this.createGame();
     }
   },
   computed: {
@@ -112,49 +127,77 @@ export default {
 
       if (!game) return;
 
-      return game.lanes.find(val => val.status === 'FINISHED');
+      return game.lanes.find(val => val.position == 10);
     }
   }
 };
 </script>
 
-<style>
-.game-board {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+<style lang="scss">
+body,
+html {
+  background: green;
+}
+* {
+  font-family: Lato, sans-serif;
 }
 
-.players {
-  overflow: scroll;
-  height: 500px;
-  width: 300px;
+.game {
   display: flex;
-  justify-content: center;
-  border: 1px solid red;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  height: 100vh;
+  box-shadow: 0 0 36px rgba(0, 0, 0, 0.2);
+
+  .game__info {
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding: 20px;
+    background: white;
+  }
+
+  textarea {
+    width: 100%;
+    font-size: 20px;
+    border: none;
+    outline: none !important;
+    border-radius: 5px;
+    padding: 5px;
+    background: #f5f5f5;
+
+    &:focus {
+      background: #f5f5f5;
+    }
+  }
+
+  .game__lanes {
+    background: black;
+    padding: 5px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: stretch;
+    overflow: hidden;
+    box-shadow: 0 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .game__card {
+    transition: transform ease-in-out 0.2s;
+    height: calc((100vh - 10px) / 10);
+    margin: 0 5px;
+  }
 }
 
-.winning-screen {
-  width: 100vw;
-  height: 100vh;
-  background: red;
+.winner {
   position: fixed;
   top: 0;
   left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-img.card.pos-1 {
-  margin-bottom: -100px;
-}
-.next-btn {
-  position: fixed;
-  background: deepskyblue;
-  color: white;
-  padding: 1rem;
-  font-size: 3rem;
   bottom: 0;
-  width: 100%;
+  right: 0;
+  background: green;
+  z-index: 9;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

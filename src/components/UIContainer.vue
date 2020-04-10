@@ -11,7 +11,7 @@ export default {};
 <style>
 .container {
   max-width: var(--container-width);
-  padding: var(--container-padding, var(--grid-spacing));
+  padding: 0 var(--container-padding, var(--grid-spacing));
   margin: 0 auto;
 }
 </style>
