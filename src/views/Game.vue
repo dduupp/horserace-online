@@ -85,7 +85,7 @@ export default {
     createGame() {
       return new Promise(resolve => {
         axios.post('//localhost:8080/game/').then(response => {
-          this.gameLocation = '/game/' + response.data.id + '/';
+          this.gameLocation = response.data;
           resolve();
         });
       });
