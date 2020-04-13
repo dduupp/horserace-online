@@ -84,7 +84,7 @@ export default {
   methods: {
     createGame() {
       return new Promise(resolve => {
-        axios.post('//localhost:8080/game/').then(response => {
+        axios.post('https://test.tommartens.eu/game/').then(response => {
           this.gameLocation = response.data;
           resolve();
         });
@@ -93,7 +93,9 @@ export default {
     connect() {
       return new Promise(resolve => {
         this.stompClient = Stomp.Stomp.over(function() {
-          return new SockJS('http://localhost:8080/horserace-online-websocket');
+          return new SockJS(
+            'https://test.tommartens.eu/horserace-online-websocket'
+          );
         });
         this.stompClient.connect({}, function() {
           resolve();
