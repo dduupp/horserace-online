@@ -71,37 +71,48 @@
 
 <script>
 import axios from 'axios';
+import SockJS from 'sockjs-client';
+let Stomp = require('@stomp/stompjs');
 
 export default {
   data: () => ({
     game: null
   }),
   created() {
-    this.createGame();
-  },
-  updated() {
-    var element = document.getElementById('players');
-    element.scrollTop = element.scrollHeight;
+    this.connect().then(() => this.createGame().then(() => this.subscribe()));
   },
   methods: {
-    syncGameData() {
-      axios.get(this.gameUrl).then(({ data }) => {
-        this.game = data;
+    createGame() {
+      return new Promise(resolve => {
+        axios.post('https://test.tommartens.eu/game/').then(response => {
+          this.gameLocation = response.data;
+          resolve();
+        });
       });
     },
-    createGame() {
-      axios.post('//localhost:8080/game/').then(response => {
-        this.gameUrl = response.headers.location;
-        this.syncGameData();
+    connect() {
+      return new Promise(resolve => {
+        this.stompClient = Stomp.Stomp.over(function() {
+          return new SockJS(
+            'https://test.tommartens.eu/horserace-online-websocket'
+          );
+        });
+        this.stompClient.connect({}, function() {
+          resolve();
+        });
+      });
+    },
+    subscribe() {
+      const self = this;
+      this.stompClient.subscribe(`${this.gameLocation}`, function(response) {
+        self.game = JSON.parse(response.body);
       });
     },
     iterateGame: function() {
-      axios.put(`${this.gameUrl}iterate/`).then(() => {
-        this.syncGameData();
-      });
+      this.stompClient.send(`${this.gameLocation}iterate/`, {});
     },
     resetGame() {
-      this.createGame();
+      this.createGame().then(() => this.subscribe());
     }
   },
   computed: {

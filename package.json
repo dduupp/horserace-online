@@ -10,13 +10,14 @@
     "start": "nodemon --exec 'vue-cli-service serve'"
   },
   "dependencies": {
+    "@stomp/stompjs": "^5.4.4",
     "axios": "^0.19.2",
     "cardsJS": "^1.1.1",
     "core-js": "^3.6.4",
     "express": "^4.17.1",
     "express-ws": "^4.0.0",
     "normalize.css": "^8.0.1",
-    "register-service-worker": "^1.6.2",
+    "sockjs-client": "^1.4.0",
     "vue": "^2.6.11",
     "vue-router": "^3.1.5"
   },
@@ -24,7 +25,6 @@
     "@vue/cli-plugin-babel": "~4.2.0",
     "@vue/cli-plugin-e2e-cypress": "~4.2.0",
     "@vue/cli-plugin-eslint": "~4.2.0",
-    "@vue/cli-plugin-pwa": "~4.2.0",
     "@vue/cli-plugin-router": "~4.2.0",
     "@vue/cli-service": "~4.2.0",
     "@vue/eslint-config-prettier": "^6.0.0",
