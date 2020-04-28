@@ -55,7 +55,6 @@
 
 <script>
 import SockJS from 'sockjs-client';
-import axios from 'axios';
 let StompJS = require('@stomp/stompjs');
 
 export default {
@@ -80,19 +79,6 @@ export default {
     },
     subscribe() {
       const self = this;
-      axios
-        .get(
-          process.env.VUE_APP_API_URL +
-            'room/' +
-            `${this.$route.params.id}` +
-            '/'
-        )
-        .then(function(response) {
-          console.log(response);
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
       this.stompClient.subscribe(
         '/room/' + `${this.$route.params.id}` + '/',
         function(response) {
