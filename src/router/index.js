@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 
 // import Home from '../views/Home.vue';
 import Game from '../views/Game.vue';
+import Room from '../views/Room.vue';
 // import Create from '../views/Create.vue';
 
 Vue.use(VueRouter);
@@ -11,8 +12,12 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    // component: Home,
     component: Game
+  },
+  {
+    path: '/room/:id',
+    name: 'room',
+    component: Room
   }
   // {
   //   path: '/game/:id',

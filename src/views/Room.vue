@@ -3,12 +3,7 @@
     <div class="container">
       <div class="game" v-if="game">
         <div class="game__info">
-          <img
-            src="/img/cards/RED_BACK.svg"
-            @click="iterateGame"
-            alt=""
-            class="card"
-          />
+          <img src="/img/cards/RED_BACK.svg" alt="" class="card" />
           <div class="game__deck">
             <div class="hand hhand-compact">
               <img
@@ -19,8 +14,6 @@
               />
             </div>
           </div>
-          <button @click="resetGame">Reset game</button>
-          <h2>{{ this.room }}</h2>
           <h2>Place your bets:</h2>
           <h3>&spades;</h3>
           <textarea rows="4"></textarea>
@@ -39,7 +32,6 @@
                   v-bind:src="'/img/cards/' + winner + '.svg'"
                 />
               </div>
-              <button @click="resetGame">Reset game</button>
             </div>
           </div>
         </div>
@@ -62,7 +54,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import SockJS from 'sockjs-client';
 let StompJS = require('@stomp/stompjs');
 
@@ -71,21 +62,9 @@ export default {
     game: null
   }),
   created() {
-    this.connect().then(() => this.createRoom().then(() => this.subscribe()));
+    this.connect().then(() => this.subscribe());
   },
   methods: {
-    createRoom() {
-      return new Promise(resolve => {
-        axios.post(process.env.VUE_APP_API_URL + '/room/').then(response => {
-          this.room = '/room/' + response.data.id + '/';
-          this.gameLocation = this.room + 'game/';
-          resolve();
-        });
-      });
-    },
-    createGame() {
-      this.stompClient.send(`${this.gameLocation}` + 'new/', {});
-    },
     connect() {
       return new Promise(resolve => {
         this.stompClient = StompJS.Stomp.over(function() {
@@ -100,15 +79,12 @@ export default {
     },
     subscribe() {
       const self = this;
-      this.stompClient.subscribe(`${this.room}`, function(response) {
-        self.game = JSON.parse(response.body).game;
-      });
-    },
-    iterateGame: function() {
-      this.stompClient.send(`${this.gameLocation}` + 'next/', {});
-    },
-    resetGame() {
-      this.createGame();
+      this.stompClient.subscribe(
+        '/room/' + `${this.$route.params.id}` + '/',
+        function(response) {
+          self.game = JSON.parse(response.body).game;
+        }
+      );
     }
   },
   computed: {
